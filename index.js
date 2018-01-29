@@ -5,22 +5,22 @@ $(document).ready(function () {
 
 
   const createMoveList = function (moves) {
-    return moves.map(move => `<li>${move.from.type} -> ${move.to.type}</li>`)
+    return moves.map(move => `<li>${move.from.type.toUpperCase()} -> ${move.to.type.toUpperCase()}</li>`).join('')
   }
 
   const createCard = function (obj) {
     return `
-      <div class="card mb-3 box-shadow">
+      <div class="card mb-4 box-shadow" style="width: 18rem;">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal">Card</h4>
+                <h4 class="my-0 font-weight-normal">${obj.src}</h4>
             </div>
             <div class="card-body">
-                <h1 class="card-title pricing-card-title">% ${obj.percent_increase} <small class="text-muted">(est.)</small></h1>
+                <h1 class="card-title pricing-card-title"><small class="text-muted">% ${obj.percent_increase}</small></h1>
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>Moves: ${obj.num_moves}</li>
                     ${createMoveList(obj.moves)}
                 </ul>
-                <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+                <!--<button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>-->
             </div>
         </div>
       `
@@ -28,11 +28,10 @@ $(document).ready(function () {
 
   const renderRoute = function (route) {
     const doneFunc = function (res) {
-      console.log(res)
       // todo create header with info
 
       if (res.length > 0) {
-        const cards = res.map(createCard)
+        const cards = res.map(createCard).join('')
         $(`#${route}`).html(cards)
       }
 
