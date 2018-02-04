@@ -26,20 +26,20 @@ $(document).ready(function () {
 
   const errorScreen = (route, err) => {
     return `
-          <div class="col-md-12 justify-content-center">
+          <div class="col-md-12 align-items-center">
               <div class="alert alert-danger">
               There was an error getting results from ${route}
               <br />
               ${err.toLocaleString()}
-              </div>
               <button class="btn btn-dark" id="${route}_reload">Reload</button>
+              </div>
           </div>
           `
   }
 
   const loadingScreen = (route) => {
     return `
-          <div class="col-md-12 justify-content-center">
+          <div class="col-md-12 align-items-center">
               <div class="alert alert-primary">Now connecting to ${route} and scanning for arbitrage possibilities.</div>
           </div>
           `
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
   const noResults = (route) => {
     return `
-          <div class="col-md-12 justify-content-center">
+          <div class="col-md-12 align-items-center">
               <div class="alert alert-dark">No results for ${route}, reload to try again</div>
               <button class="btn btn-dark" id="${route}_reload">Reload</button>
           </div>
