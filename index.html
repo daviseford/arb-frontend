@@ -1,39 +1,59 @@
 <!DOCTYPE html>
-<html xmlns=http://www.w3.org/1999/xhtml xml:lang=en lang=en-us>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
-    <link href=http://gmpg.org/xfn/11 rel=profile>
-    <meta http-equiv=content-type content="text/html; charset=utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>testing</title>
-
-
-    <link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css
-          integrity=sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm crossorigin=anonymous>
-
+    <link href="http://gmpg.org/xfn/11" rel="profile">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Bitcoin Arbitrage Calculator</title>
+    <meta property="og:title" content="Bitcoin Arbitrage Calculator"/>
+    <meta property="og:description"
+          content="This page fetches the latest market data from multiple cryptocurrency exchanges, and returns profitable trade possibilities. All fees are taken into account when calculating profit">
+    <meta property="og:url" content="http://daviseford.com/bitcoin-arbitrage/"/>
+    <meta property="og:image" content="http://daviseford.com/blog/public/img/crypto/arb-image.png"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-
     <script src="index.js" type="application/javascript"></script>
-
 </head>
 <body>
-
-
-<div class="album py-5 bg-light">
-    <div class=container>
-        <div id=app></div>
-    </div>
-</div>
 
 <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <h5>Interested in more exchanges, auto-reload, and access to the API?
-                <a href="mailto:davis.e.ford.alt+arb@gmail.com">Email me for pricing</a>
-            </h5>
+            <h1 class="text-center">Bitcoin Arbitrage Calculator</h1>
+            <p class="text-muted">This page fetches the latest market data from Cryptopia and Bittrex, and returns
+                profitable trade
+                possibilities. All fees are taken into account when calculating profitable trades.</p>
         </div>
     </div>
 </div>
 
+<div class="container">
+    <div id="app"></div>
+</div>
+
+<div class=container>
+    <div class="row">
+        <div class="col-md-6 offset-md-3"><h5>Interested in more exchanges, auto-reload, and access to the API?
+            <a href=mailto:davis.e.ford.alt+arb@gmail.com>Email me for pricing</a></h5>
+        </div>
+    </div>
+</div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-55820654-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-55820654-2');
+</script>
 
 
+</body>
+</html>

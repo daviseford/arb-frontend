@@ -1,7 +1,7 @@
 $(document).ready(function () {
   const app = $('#app');
   const endpoint = 'https://24jaev6jz6.execute-api.us-east-1.amazonaws.com/dev/';
-  const routes = ['cryptopia'];
+  const routes = ['cryptopia', 'bittrex'];
 
   /**
    * https://stackoverflow.com/questions/10454518/javascript-how-to-retrieve-the-number-of-decimals-of-a-string-number
@@ -13,7 +13,6 @@ $(document).ready(function () {
     return !match ? 0 : Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
   };
 
-
   const shortestDecimalRepresentation = function (num) {
     if (typeof num === 'string') {
       num = parseFloat(num)
@@ -23,9 +22,20 @@ $(document).ready(function () {
     if (decimal_places === 0) return num;
     if (decimal_places <= max) return num.toFixed(decimal_places)
     return num.toFixed(max)
-
-
   };
+
+  const errorScreen = (route, err) => {
+    return `
+          <div class="col-md-12 justify-content-center">
+              <div class="alert alert-danger">
+              There was an error getting results from ${route}
+              <br />
+              ${err.toLocaleString()}
+              </div>
+              <button class="btn btn-dark" id="${route}_reload">Reload</button>
+          </div>
+          `
+  }
 
   const loadingScreen = (route) => {
     return `
@@ -38,71 +48,79 @@ $(document).ready(function () {
   const noResults = (route) => {
     return `
           <div class="col-md-12 justify-content-center">
-              <div class="alert alert-dark">No results for ${route}, refresh to try again</div>
-              <button class="btn btn-dark" id="${route}_reload">reload</button>
+              <div class="alert alert-dark">No results for ${route}, reload to try again</div>
+              <button class="btn btn-dark" id="${route}_reload">Reload</button>
           </div>
           `
   }
 
-  const createListElement = function (move) {
+  const addButtonReload = (route) => {
+    $(`#${route}_reload`).click(function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      reloadRoute(route)
+    })
+  };
+
+  const createListElement = (move) => {
     const from = `${shortestDecimalRepresentation(move.from.quantity)} ${move.from.type.toUpperCase()}`
     const to = `${shortestDecimalRepresentation(move.to.quantity)} ${move.to.type.toUpperCase()}`;
-    const sep = `->`;
+    const sep = `<span class="text-muted">-></span>`;
     return `${from} ${sep} ${to}`
   }
 
-  const createMoveList = function (moves) {
-    console.log(moves)
-    return moves.map(move => `<li>${createListElement(move)}</li>`).join('')
+  const createMoveList = (moves) => {
+    return moves.map(move => `<li class="list-group-item">${createListElement(move)}</li>`).join('')
   };
 
-  const createCard = function (obj) {
+  const createCard = (obj) => {
     return `
-      <div class="card mb-4 box-shadow">
-            <div class="card-header">
-                <h4 class="my-0 font-weight-normal">${obj.src}</h4>
-            </div>
-            <div class="card-body">
-                <h1 class="card-title pricing-card-title">${obj.percent_increase}<small class="text-muted">%</small></h1>
-                <ul class="list-unstyled mt-3 mb-4">
-                    <li>Moves: ${obj.num_moves}</li>
-                    ${createMoveList(obj.moves)}
-                </ul>
-            </div>
-        </div>
+      <div class="col-md-6 border-primary pb-2 pt-2 bg-light justify-content-center">
+          <h3 class="card-title pricing-card-title text-center">
+              <strong>Profit: ${obj.percent_increase}%</strong>
+              <small class="text-muted"> from <span class="text-capitalize">${obj.src}</span></small>
+          </h3>
+          <ul class="list-group">
+              <li class="list-group-item">Moves: ${obj.num_moves}</li>
+              ${createMoveList(obj.moves)}
+          </ul>
+      </div>
       `
   }
 
-  const reloadRoute = function (route) {
+  const reloadRoute = (route) => {
     console.log(`Reloading ${route}_reload button`)
     renderRoute(route)
   }
 
-  const renderRoute = function (route) {
-    const route_container = $(`#${route}`)
+  const renderRoute = (route) => {
+    const route_container = $(`#${route}_container`)
     route_container.html(loadingScreen(route))
-    const doneFunc = function (res) {
-      // todo create header with info
-
+    const doneFunc = (res) => {
       if (res.length > 0) {
         const cards = res.map(createCard).join('');
         route_container.html(cards)
       } else {
         console.log('No results')
         route_container.html(noResults(route))
-        $(`#${route}_reload`).click(function (e) {
-          e.stopPropagation();
-          e.preventDefault();
-          reloadRoute(route)
-        })
+        addButtonReload(route)
       }
     }
-    $.get(endpoint + route).done(doneFunc)
+
+    const failFunc = (err) => {
+      route_container.html(errorScreen(route, err))
+      addButtonReload(route)
+    }
+
+    // Get the endpoint, and then render the app
+    $.get(endpoint + route)
+        .done(doneFunc)
+        .fail(failFunc)
 
   }
 
   /* Add route html divs */
-  app.html(routes.map(route => `<div class="row"><div id="${route}" class="col-md-12"></div></div>`))
+  app.html(routes.map(route => `<div class="row" id="${route}_container"></div>`));
 
   /* Render route responses */
   routes.forEach(renderRoute)
