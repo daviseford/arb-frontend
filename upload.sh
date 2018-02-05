@@ -18,6 +18,7 @@ SITE_OUTPUT_DIR='./generated/'  # Constants
 # BUILD OPTIONS - EDIT THESE
 MINIFY_CSS=true             # Minify any CSS in your CSS_DIR
 MINIFY_JS=true              # Minify any JS files in your JS_DIR
+BABELIFY_JS=true            # Babelify any JS files in your JS_DIR
 MINIFY_HTML=true            # Minify the Jekyll-generated HTML in your SITE_DIR
 
 
@@ -68,17 +69,25 @@ if [ "$MINIFY_JS" = true ] && [ -d "$JS_DIR" ]; then
 fi
 }
 
+babelify_js()
+{
+if [ "$BABELIFY_JS" = true ] && [ -d "$JS_DIR" ]; then
+    # We use the npm-g root trick to load global presets for Babel
+    for file in `find ${JS_DIR} -name "*.js" -type f -not -name "*.min.js"`; do
+        npx babel "$file" --presets "$(npm -g root)/babel-preset-env" --out-file "$file"
+    done
+    echo "Babelified JS"
+fi
+}
+
 ### START OF EXECUTION ###
+make_site_output_dir && move_to_output_dir
 
-make_site_output_dir
-move_to_output_dir
+# Babelify/Minify Javascript
+babelify_js && minify_js
 
-# Minify CSS and JS source files - important to do this BEFORE building
-minify_css && minify_js
-
-# Minify HTML (this modifies the generated HTML) - do AFTER building
-minify_html
-
+#Minify CSS/HTML
+minify_css && minify_html
 
 # Upload to S3 - unless -n (no-upload) is passed in
 aws s3 sync --delete --size-only ${SITE_OUTPUT_DIR} ${SITE_S3} --exclude "*.idea*" --exclude "*.sh" --exclude "*.git*" --exclude "*.DS_Store"

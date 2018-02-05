@@ -8,54 +8,64 @@ $(document).ready(function () {
    * @param num
    * @returns {number}
    */
-  const getNumDecimalPlaces = function (num) {
+  const getNumDecimalPlaces = (num) => {
     const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
     return !match ? 0 : Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
   };
 
-  const shortestDecimalRepresentation = function (num) {
+  const shortestDecimalRepresentation = (num) => {
     if (typeof num === 'string') {
       num = parseFloat(num)
     }
-    const decimal_places = getNumDecimalPlaces(num)
+    const decimal_places = getNumDecimalPlaces(num);
     const max = 10;
     if (decimal_places === 0) return num;
-    if (decimal_places <= max) return num.toFixed(decimal_places)
+    if (decimal_places <= max) return num.toFixed(decimal_places);
     return num.toFixed(max)
   };
 
+  const displayError = (error) => {
+    if (!error) return 'No details returned for this error.';
+    if (error instanceof Error) return error.message || 'Error!';
+    if (typeof error === 'object') return JSON.stringify(error);
+    if (typeof error === 'string') return error;
+    return error.toLocaleString()
+  };
+
   const errorScreen = (route, err) => {
-    return `
-          <div class="col-md-12 align-items-center">
-              <div class="alert alert-danger">
-              There was an error getting results from ${route}
-              <br />
-              ${err.toLocaleString()}
-              <button class="btn btn-dark" id="${route}_reload">Reload</button>
-              </div>
-          </div>
-          `
-  }
+    return `<div class="col-md-12 align-items-center">
+                <div class="alert alert-danger">
+                  There was an error getting results from ${route}
+                  <br />
+                  ${displayError(err)}
+                  <div class="d-flex justify-content-center">
+                    <div class="btn-group">
+                        <button class="btn btn-dark" id="${route}_reload">Reload</button>
+                    </div>
+                  </div>
+                </div>
+            </div>`
+  };
 
   const loadingScreen = (route) => {
-    return `
-          <div class="col-md-12 align-items-center">
-              <div class="alert alert-primary">Now connecting to ${route} and scanning for arbitrage possibilities.</div>
-          </div>
-          `
-  }
+    return `<div class="col-md-12 align-items-center">
+                <div class="alert alert-primary">Now connecting to ${route} and scanning for arbitrage possibilities.</div>
+            </div>`
+  };
 
   const noResults = (route) => {
-    return `
-          <div class="col-md-12 align-items-center">
-              <div class="alert alert-dark">No results for ${route}, reload to try again</div>
-              <button class="btn btn-dark" id="${route}_reload">Reload</button>
-          </div>
-          `
-  }
+    return `<div class="col-md-12 align-items-center">
+                <div class="alert alert-dark">No results for ${route}, reload to try again</div>
+                <div class="d-flex justify-content-center">
+                  <div class="btn-group">
+                      <button class="btn btn-dark" id="${route}_reload">Reload</button>
+                  </div>
+                </div>
+            </div>`
+  };
 
   const addButtonReload = (route) => {
-    $(`#${route}_reload`).click(function (e) {
+    $(`#${route}_reload`).click((e) => {
       e.stopPropagation();
       e.preventDefault();
       reloadRoute(route)
@@ -67,7 +77,7 @@ $(document).ready(function () {
     const to = `${shortestDecimalRepresentation(move.to.quantity)} ${move.to.type.toUpperCase()}`;
     const sep = `<span class="text-muted">-></span>`;
     return `${from} ${sep} ${to}`
-  }
+  };
 
   const createMoveList = (moves) => {
     return moves.map(move => `<li class="list-group-item">${createListElement(move)}</li>`).join('')
@@ -86,38 +96,36 @@ $(document).ready(function () {
           </ul>
       </div>
       `
-  }
+  };
 
   const reloadRoute = (route) => {
-    console.log(`Reloading ${route}_reload button`)
+    console.log(`Reloading ${route}_reload button`);
     renderRoute(route)
-  }
+  };
 
   const renderRoute = (route) => {
-    const route_container = $(`#${route}_container`)
-    route_container.html(loadingScreen(route))
+    const route_container = $(`#${route}_container`);
+    route_container.html(loadingScreen(route));
     const doneFunc = (res) => {
       if (res.length > 0) {
         const cards = res.map(createCard).join('');
         route_container.html(cards)
       } else {
-        console.log('No results')
-        route_container.html(noResults(route))
+        console.log('No results');
+        route_container.html(noResults(route));
         addButtonReload(route)
       }
-    }
+    };
 
     const failFunc = (err) => {
       route_container.html(errorScreen(route, err))
       addButtonReload(route)
-    }
+    };
 
     // Get the endpoint, and then render the app
-    $.get(endpoint + route)
-        .done(doneFunc)
-        .fail(failFunc)
+    $.get(endpoint + route).done(doneFunc).fail(failFunc)
 
-  }
+  };
 
   /* Add route html divs */
   app.html(routes.map(route => `<div class="row" id="${route}_container"></div>`));
