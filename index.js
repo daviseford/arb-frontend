@@ -35,13 +35,11 @@ $(document).ready(function () {
   const errorScreen = (route, err) => {
     return `<div class="col-md-12 align-items-center">
                 <div class="alert alert-danger">
-                  There was an error getting results from ${route}
+                  There was an error getting results from <span class="text-capitalize">${route}</span>
                   <br />
                   ${displayError(err)}
                   <div class="d-flex justify-content-center">
-                    <div class="btn-group">
-                        <button class="btn btn-dark" id="${route}_reload">Reload</button>
-                    </div>
+                    <div class="btn-group"><button class="btn btn-dark" id="${route}_reload">Reload</button></div>
                   </div>
                 </div>
             </div>`
@@ -49,17 +47,17 @@ $(document).ready(function () {
 
   const loadingScreen = (route) => {
     return `<div class="col-md-12 align-items-center">
-                <div class="alert alert-primary">Now connecting to ${route} and scanning for arbitrage possibilities.</div>
+                <div class="alert alert-primary">Now connecting to <span class="text-capitalize">${route}</span> and scanning for arbitrage possibilities.</div>
             </div>`
   };
 
   const noResults = (route) => {
     return `<div class="col-md-12 align-items-center">
-                <div class="alert alert-dark">No results for ${route}, reload to try again</div>
-                <div class="d-flex justify-content-center">
-                  <div class="btn-group">
-                      <button class="btn btn-dark" id="${route}_reload">Reload</button>
-                  </div>
+                <div class="alert alert-dark">
+                    <p>No results for <span class="text-capitalize">${route}</span>, reload to try again</p>
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group"><button class="btn btn-dark" id="${route}_reload">Reload</button></div>
+                    </div>
                 </div>
             </div>`
   };
