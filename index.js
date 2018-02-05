@@ -34,7 +34,7 @@ $(document).ready(function () {
 
   const errorScreen = (route, err) => {
     return `<div class="col-md-12 align-items-center">
-                <div class="alert alert-danger">
+                <div class="alert alert-danger text-center">
                   There was an error getting results from <span class="text-capitalize">${route}</span>
                   <br />
                   ${displayError(err)}
@@ -47,13 +47,13 @@ $(document).ready(function () {
 
   const loadingScreen = (route) => {
     return `<div class="col-md-12 align-items-center">
-                <div class="alert alert-primary">Now connecting to <span class="text-capitalize">${route}</span> and scanning for arbitrage possibilities.</div>
+                <div class="alert alert-primary text-center">Now connecting to <span class="text-capitalize">${route}</span> and scanning for arbitrage possibilities.</div>
             </div>`
   };
 
   const noResults = (route) => {
     return `<div class="col-md-12 align-items-center">
-                <div class="alert alert-dark">
+                <div class="alert alert-dark text-center">
                     <p>No results for <span class="text-capitalize">${route}</span>, reload to try again</p>
                     <div class="d-flex justify-content-center">
                         <div class="btn-group"><button class="btn btn-dark" id="${route}_reload">Reload</button></div>
