@@ -7,4 +7,5 @@
 *.iml
 out
 generated/
+_generated/
 

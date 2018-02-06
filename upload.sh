@@ -11,9 +11,9 @@
 
 # BUILD OPTIONS - EDIT THESE
 SITE_S3='s3://daviseford-website-code/bitcoin-arbitrage/'    # Your S3 bucket address
-CSS_DIR='./generated/'     # Constants
-JS_DIR='./generated/'       # Constants
-SITE_OUTPUT_DIR='./generated/'  # Constants
+SITE_OUTPUT_DIR='./_generated/'  # Constants
+CSS_DIR="${SITE_OUTPUT_DIR}/css"     # Constants
+JS_DIR="${SITE_OUTPUT_DIR}/js"       # Constants
 
 # BUILD OPTIONS - EDIT THESE
 MINIFY_CSS=true             # Minify any CSS in your CSS_DIR
@@ -50,8 +50,7 @@ fi
 minify_css()    # Using UglifyCSS | npm install uglifycss -g
 {
 if [ "$MINIFY_CSS" = true ]  && [ -d "$CSS_DIR" ]; then
-    find ${CSS_DIR} -name "*.min.css" -type f|xargs rm -f   # Delete existing minified files
-    for file in `find ${CSS_DIR} -name "*.css" -type f`; do
+    for file in `find ${CSS_DIR} -name "*.css" -type f -not -name "*.min.css"`; do
         uglifycss --ugly-comments --output "${file/.css/.min.css}" "$file" # Create minified CSS file
     done
     echo "Minified CSS"
@@ -61,8 +60,7 @@ fi
 minify_js()     # Using google-closure-compiler-js | npm install google-closure-compiler-js -g
 {
 if [ "$MINIFY_JS" = true ] && [ -d "$JS_DIR" ]; then
-    find ${JS_DIR} -name "*.min.js" -type f|xargs rm -f   # Delete existing minified files
-    for file in `find ${JS_DIR} -name "*.js" -type f`; do
+    for file in `find ${JS_DIR} -name "*.js" -type f -not -name "*.min.js"`; do
         google-closure-compiler-js "$file" > "${file/.js/.min.js}"
     done
     echo "Minified JS"
