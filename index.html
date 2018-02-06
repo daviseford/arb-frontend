@@ -10,14 +10,35 @@
           content="This page fetches the latest market data from multiple cryptocurrency exchanges, and returns profitable trade possibilities. All fees are taken into account when calculating profit">
     <meta property="og:url" content="http://daviseford.com/bitcoin-arbitrage/"/>
     <meta property="og:image" content="http://daviseford.com/blog/public/img/crypto/arb-image.png"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="index.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="css/bootstrap4.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="js/index.min.js"></script>
 </head>
 <body>
 
+<header>
+    <div class=row>
+        <div class="col-8 offset-2">
+            <div class="row pt-1">
+                <div class="col-xs-12 col-md-12 col-lg-4 col-xl-2 offset-xl-2 text-center"><a class=navbar-brand
+                                                                                              href="/blog/">daviseford</a>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-8 col-xl-7">
+                    <ul class="nav justify-content-center">
+                        <li class=nav-item><a href=/blog/pages/projects.html class=nav-link>Projects</a></li>
+                        <li class=nav-item><a href=https://github.com/daviseford class=nav-link target=_blank>GitHub</a>
+                        </li>
+                        <li class=nav-item><a class=nav-link href=/blog/pages/archive.html>Archive</a></li>
+                        <li class=nav-item><a class=nav-link href=/blog/pages/tags.html>Tags</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="container jumbotron">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h1 class="text-center">Bitcoin Arbitrage Calculator</h1>
@@ -42,8 +63,7 @@
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55820654-2"></script>
-<script>
-</script>
+<script> window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-55820654-2');</script>
 
 
 </body>
