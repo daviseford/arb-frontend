@@ -1,19 +1,14 @@
 #!/bin/bash
-# This script does some various utility tasks
-# Builds the static site using Jekyll
-# And syncs the generated site with S3
-
-# You can run this script with three options
-# -i  | enable Image processing. Creates thumbnails and quickly compresses images.
-# -c  | enable maximum Compression for images. Creates thumbnails, thoroughly compresses images, and takes a long time doing it
-# -n  | No-upload mode. Doesn't upload the build to S3.
-# -s  | enable Setup mode. Downloads the necessary npm files for compression
 
 # BUILD OPTIONS - EDIT THESE
-SITE_S3='s3://daviseford-website-code/bitcoin-arbitrage/'    # Your S3 bucket address
-SITE_OUTPUT_DIR='./_generated/'  # Constants
-CSS_DIR="${SITE_OUTPUT_DIR}/css"     # Constants
-JS_DIR="${SITE_OUTPUT_DIR}/js"       # Constants
+SITE_S3='s3://daviseford.com/bitcoin-arbitrage/'    # Your S3 bucket address
+SITE_OUTPUT_DIR='./_generated/'     # Constants
+CSS_DIR="${SITE_OUTPUT_DIR}/css"    # Constants
+JS_DIR="${SITE_OUTPUT_DIR}/js"      # Constants
+
+CF_DIST_ID='EOV559H6J3O6V'          # Cloudfront Distribution ID
+CF_PATH='/bitcoin-arbitrage/*'      # Cloudfront Path to invalidate
+
 
 # BUILD OPTIONS - EDIT THESE
 MINIFY_CSS=true             # Minify any CSS in your CSS_DIR
@@ -61,7 +56,7 @@ minify_js()     # Using google-closure-compiler-js | npm install google-closure-
 {
 if [ "$MINIFY_JS" = true ] && [ -d "$JS_DIR" ]; then
     for file in `find ${JS_DIR} -name "*.js" -type f -not -name "*.min.js"`; do
-        google-closure-compiler-js "$file" > "${file/.js/.min.js}"
+        npx google-closure-compiler "$file" > "${file/.js/.min.js}"
     done
     echo "Minified JS"
 fi
@@ -90,3 +85,6 @@ minify_css && minify_html
 # Upload to S3 - unless -n (no-upload) is passed in
 aws s3 sync --delete --size-only ${SITE_OUTPUT_DIR} ${SITE_S3} --exclude "*.idea*" --exclude "*.sh" --exclude "*.git*" --exclude "*.DS_Store"
 echo "Uploaded to http://daviseford.com/bitcoin-arbitrage/"
+
+aws cloudfront create-invalidation --distribution-id ${CF_DIST_ID} --paths ${CF_PATH}
+echo "Invalidated Cloudfront cache."
